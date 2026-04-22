@@ -3,6 +3,7 @@ import {
   nameToPath,
   type FontLike,
   type GlyphLike,
+  resolveAssetUrl,
 } from "@signature/react-internal/vectorize/nameToPath";
 
 describe("nameToPath", () => {
@@ -103,6 +104,18 @@ describe("nameToPath", () => {
     expect(result.paths[0]?.bounds?.width).toBeGreaterThan(0);
     expect(result.paths[1]?.bounds?.width).toBeGreaterThan(0);
     expect(result.paths[0]?.d).not.toEqual(result.paths[1]?.d);
+  });
+
+  it("resolves bundled font assets relative to the module url", () => {
+    // Arrange
+    const assetPath = "./allura-latin-400-normal-RNA6ZRW5.woff";
+    const moduleUrl = "https://example.com/assets/index.js";
+
+    // Act
+    const result = resolveAssetUrl(assetPath, moduleUrl);
+
+    // Assert
+    expect(result).toBe("https://example.com/assets/allura-latin-400-normal-RNA6ZRW5.woff");
   });
 
   it("rejects blank names before loading the font", async () => {

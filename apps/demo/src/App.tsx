@@ -5,7 +5,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   SignaturePadCard,
   TypedSignatureCard,
-  nameToPath,
   type SignatureVector,
 } from "@signature/react";
 import { UseCaseDialog, type UseCaseDetails } from "./UseCaseDialog";
@@ -15,8 +14,6 @@ gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 const DRAWN_TRACE_DURATION_MS = 3600;
 const TYPED_TRACE_DURATION_MS = 3400;
-
-const FEATURED_NAME = "Nacho Estevo";
 
 const DRAWN_FEATURED: SignatureVector = {
   width: 420,
@@ -388,12 +385,9 @@ export default function App() {
   const [isStudioOpen, setIsStudioOpen] = useState(false);
   const [activeMode, setActiveMode] = useState<"draw" | "type">("draw");
   const [studioRestartToken, setStudioRestartToken] = useState(0);
-  const [typedFeatured, setTypedFeatured] = useState<SignatureVector>(
-    TYPED_FEATURED_FALLBACK,
-  );
   const featuredMode = activeMode;
   const featuredSignature =
-    featuredMode === "draw" ? DRAWN_FEATURED : typedFeatured;
+    featuredMode === "draw" ? DRAWN_FEATURED : TYPED_FEATURED_FALLBACK;
   const featuredIsFilled = featuredMode === "type";
   const featuredTitle =
     featuredMode === "draw" ? "Drawn signature trace" : "Typed signature trace";
@@ -401,29 +395,6 @@ export default function App() {
     featuredMode === "draw"
       ? "motion-signatures-drawn"
       : "motion-signatures-typed";
-
-  useEffect(() => {
-    if (!shouldAnimate) {
-      return;
-    }
-
-    let cancelled = false;
-
-    nameToPath(FEATURED_NAME, { width: 420, height: 160, padding: 20 })
-      .then((signature) => {
-        if (!cancelled) {
-          setTypedFeatured(signature);
-        }
-      })
-      .catch(() => {
-        // Keep the static fallback when the font asset is unavailable.
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [shouldAnimate]);
-
   const handleDownloadSvg = () => {
     exportSignatureSvg(
       featuredSignature,

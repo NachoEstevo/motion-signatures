@@ -59,6 +59,10 @@ type GlyphCapableFont = FontLike & {
   getKerningValue: (leftGlyph: unknown, rightGlyph: unknown) => number;
 };
 
+export function resolveAssetUrl(assetPath: string, moduleUrl: string): string {
+  return new URL(assetPath, moduleUrl).href;
+}
+
 /**
  * Converts a typed name into a normalized SVG vector that can be animated
  * exactly like a captured signature.
@@ -245,7 +249,7 @@ async function loadDefaultFont(): Promise<FontLike> {
     return cachedFont;
   }
 
-  const response = await fetch(alluraFontUrl);
+  const response = await fetch(resolveAssetUrl(alluraFontUrl, import.meta.url));
 
   if (!response.ok) {
     throw new Error("Unable to load the signature font asset");
