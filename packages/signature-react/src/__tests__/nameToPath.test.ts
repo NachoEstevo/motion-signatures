@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { nameToPath } from "@signature/react-internal/vectorize/nameToPath";
+import {
+  nameToPath,
+  type FontLike,
+  type GlyphLike,
+} from "@signature/react-internal/vectorize/nameToPath";
 
 describe("nameToPath", () => {
   it("builds a normalized vector signature from an injected font loader", async () => {
@@ -64,6 +68,41 @@ describe("nameToPath", () => {
 
     expect(topOfGlyph).toBeGreaterThanOrEqual(padding - 0.01);
     expect(bottomOfGlyph).toBeLessThanOrEqual(height - padding + 0.01);
+  });
+
+  it("returns separate vector paths for each glyph when glyph APIs are available", async () => {
+    // Arrange
+    const makePath = (x1: number, y1: number, x2: number, y2: number, label: string) => ({
+      toPathData: () => `M ${x1} ${y1} L ${x2} ${y2} ${label}`,
+      getBoundingBox: () => ({ x1, y1, x2, y2 }),
+    });
+    const glyphs: GlyphLike[] = [
+      {
+        advanceWidth: 320,
+        getPath: (x: number, y: number, fontSize: number) =>
+          makePath(x, y - fontSize * 0.6, x + fontSize * 0.35, y, "A"),
+      },
+      {
+        advanceWidth: 280,
+        getPath: (x: number, y: number, fontSize: number) =>
+          makePath(x, y - fontSize * 0.5, x + fontSize * 0.32, y + 2, "B"),
+      },
+    ];
+    const loadFont = async (): Promise<FontLike> => ({
+      getPath: () => makePath(0, -10, 10, 10, "fallback"),
+      unitsPerEm: 1000,
+      getKerningValue: () => 0,
+      stringToGlyphs: () => glyphs,
+    });
+
+    // Act
+    const result = await nameToPath("AB", { loadFont });
+
+    // Assert
+    expect(result.paths).toHaveLength(2);
+    expect(result.paths[0]?.bounds?.width).toBeGreaterThan(0);
+    expect(result.paths[1]?.bounds?.width).toBeGreaterThan(0);
+    expect(result.paths[0]?.d).not.toEqual(result.paths[1]?.d);
   });
 
   it("rejects blank names before loading the font", async () => {

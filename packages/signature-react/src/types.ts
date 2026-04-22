@@ -7,6 +7,12 @@ export type StrokePoint = {
 export type SignaturePath = {
   d: string;
   length: number;
+  bounds?: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
 };
 
 export type SignatureVector = {

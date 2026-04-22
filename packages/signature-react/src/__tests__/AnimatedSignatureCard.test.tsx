@@ -64,6 +64,35 @@ describe("AnimatedSignatureCard", () => {
     expect(path.style.animationName).toBe("");
   });
 
+  it("renders one fill reveal segment per path in fill mode", () => {
+    // Arrange
+    render(
+      <AnimatedSignatureCard
+        renderMode="fill"
+        signature={{
+          width: 320,
+          height: 120,
+          viewBox: "0 0 320 120",
+          paths: [
+            {
+              d: "M 10 10 L 90 10 L 90 70 L 10 70 Z",
+              length: 0,
+              bounds: { x: 10, y: 10, width: 80, height: 60 },
+            },
+            {
+              d: "M 120 15 L 180 15 L 180 72 L 120 72 Z",
+              length: 0,
+              bounds: { x: 120, y: 15, width: 60, height: 57 },
+            },
+          ],
+        }}
+      />,
+    );
+
+    // Assert
+    expect(screen.getAllByTestId("signature-fill-segment")).toHaveLength(2);
+  });
+
   it("restarts the animation timeline when replay is pressed", () => {
     // Arrange
     render(

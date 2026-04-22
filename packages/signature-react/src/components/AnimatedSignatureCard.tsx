@@ -65,7 +65,7 @@ export function AnimatedSignatureCard({
   const [manualReplayCount, setManualReplayCount] = useState(0);
   const frameRef = useRef<HTMLDivElement>(null);
   const pathRefs = useRef<SVGPathElement[]>([]);
-  const revealRectRef = useRef<SVGRectElement>(null);
+  const revealRectRefs = useRef<Array<SVGRectElement | null>>([]);
   const clipBaseId = useId().replace(/[^a-zA-Z0-9_-]/g, "");
   const metrics = useMemo(
     () =>
@@ -83,7 +83,17 @@ export function AnimatedSignatureCard({
   }, [signature]);
 
   const isFill = renderMode === "fill";
-  const revealClipId = `signature-reveal-${clipBaseId}-${replayToken}`;
+  const fillSegments = useMemo(() => {
+    if (!signature || !viewBoxRect) {
+      return [];
+    }
+
+    return signature.paths.map((path, index) => ({
+      path,
+      bounds: path.bounds ?? viewBoxRect,
+      clipId: `signature-reveal-${clipBaseId}-${replayToken}-${index}`,
+    }));
+  }, [clipBaseId, replayToken, signature, viewBoxRect]);
 
   useGSAP(
     () => {
@@ -94,15 +104,35 @@ export function AnimatedSignatureCard({
       const durationSeconds = Math.max(durationMs / 1000, 0.2);
 
       if (isFill) {
-        const rect = revealRectRef.current;
-        if (!rect || !viewBoxRect) {
+        if (fillSegments.length === 0) {
           return;
         }
-        gsap.set(rect, { attr: { width: 0 } });
-        gsap.to(rect, {
-          attr: { width: viewBoxRect.width },
-          duration: durationSeconds,
-          ease: "power3.out",
+
+        const timeline = gsap.timeline();
+
+        fillSegments.forEach((segment, index) => {
+          const rect = revealRectRefs.current[index];
+          if (!rect) {
+            return;
+          }
+
+          const metric = metrics?.segments[index];
+          const start = metric?.start ?? index / fillSegments.length;
+          const segmentWeight =
+            metric?.end && metric?.start !== undefined
+              ? metric.end - metric.start
+              : 1 / fillSegments.length;
+
+          gsap.set(rect, { attr: { width: 0 } });
+          timeline.to(
+            rect,
+            {
+              attr: { width: segment.bounds.width },
+              duration: Math.max(durationSeconds * segmentWeight, 0.18),
+              ease: "power3.out",
+            },
+            start * durationSeconds,
+          );
         });
         return;
       }
@@ -183,21 +213,32 @@ export function AnimatedSignatureCard({
           >
             {isFill ? (
               <defs>
-                <clipPath id={revealClipId} clipPathUnits="userSpaceOnUse">
-                  <rect
-                    ref={revealRectRef}
-                    x={viewBoxRect.x}
-                    y={viewBoxRect.y}
-                    width={0}
-                    height={viewBoxRect.height}
-                  />
-                </clipPath>
+                {fillSegments.map((segment, index) => (
+                  <clipPath
+                    id={segment.clipId}
+                    key={segment.clipId}
+                    clipPathUnits="userSpaceOnUse"
+                  >
+                    <rect
+                      data-testid="signature-fill-segment"
+                      ref={(node) => {
+                        revealRectRefs.current[index] = node;
+                      }}
+                      x={segment.bounds.x}
+                      y={segment.bounds.y}
+                      width={0}
+                      height={segment.bounds.height}
+                    />
+                  </clipPath>
+                ))}
               </defs>
             ) : null}
-            <g clipPath={isFill ? `url(#${revealClipId})` : undefined}>
-              {metrics.segments.map((segment, index) => (
+            {metrics.segments.map((segment, index) => (
+              <g
+                clipPath={isFill ? `url(#${fillSegments[index]?.clipId})` : undefined}
+                key={`${replayToken}-${index}-${segment.d}`}
+              >
                 <path
-                  key={`${replayToken}-${index}-${segment.d}`}
                   ref={(node) => {
                     if (node) {
                       pathRefs.current[index] = node;
@@ -220,8 +261,8 @@ export function AnimatedSignatureCard({
                         }
                   }
                 />
-              ))}
-            </g>
+              </g>
+            ))}
           </svg>
         ) : (
           <div
