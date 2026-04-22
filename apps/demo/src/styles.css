@@ -23,6 +23,16 @@ body {
   background: #f3efe7;
 }
 
+::selection {
+  background: rgba(17, 17, 17, 0.18);
+  color: #111111;
+}
+
+::-moz-selection {
+  background: rgba(17, 17, 17, 0.18);
+  color: #111111;
+}
+
 button,
 input,
 a {
@@ -627,6 +637,10 @@ a {
 .studio-head h2 {
   font-size: clamp(2.5rem, 5vw, 4.2rem);
   max-width: 14ch;
+}
+
+.library-section .section-intro h2 {
+  max-width: 22ch;
 }
 
 .use-case-grid {
@@ -1379,6 +1393,10 @@ a {
 
   .hero h1 {
     max-width: 11ch;
+  }
+
+  .library-section .section-intro h2 {
+    max-width: 18ch;
   }
 
   .contract-card {

@@ -12,8 +12,8 @@ export type TypedSignatureCardProps = {
 
 /**
  * Combines typed-name capture with the animated preview card.
- * The typed signature is revealed with a left-to-right clip-path sweep
- * so filled glyph outlines feel like they're being written in.
+ * The typed signature is replayed as a sequential stroke trace so
+ * each glyph appears in a handwriting-like cadence inside the studio.
  *
  * @param props Optional font loader override and animation timing.
  * @returns A complete typed-signature generation flow.
@@ -39,7 +39,7 @@ export function TypedSignatureCard({
       <AnimatedSignatureCard
         description="Generate a signature-style SVG from a typed name and replay its trace."
         durationMs={durationMs}
-        renderMode="fill"
+        renderMode="stroke"
         restartToken={restartToken}
         signature={signature}
         title="Typed signature"

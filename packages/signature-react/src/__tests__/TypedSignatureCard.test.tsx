@@ -32,4 +32,34 @@ describe("TypedSignatureCard", () => {
       expect(screen.getAllByTestId("signature-stroke")).toHaveLength(1);
     });
   });
+
+  it("uses stroke playback for generated typed signatures in the studio preview", async () => {
+    // Arrange
+    const user = userEvent.setup();
+    render(
+      <TypedSignatureCard
+        loadFont={async () => ({
+          getPath: () => ({
+            toPathData: () => "M 0 0 C 20 0 40 30 70 30",
+            getBoundingBox: () => ({
+              x1: 0,
+              y1: 0,
+              x2: 70,
+              y2: 30,
+            }),
+          }),
+        })}
+      />,
+    );
+
+    // Act
+    await user.type(screen.getByLabelText("Type your name"), "Nacho");
+    await user.click(screen.getByRole("button", { name: "Generate signature" }));
+
+    // Assert
+    await waitFor(() => {
+      expect(screen.getAllByTestId("signature-stroke")).toHaveLength(1);
+    });
+    expect(screen.queryByTestId("signature-fill-segment")).not.toBeInTheDocument();
+  });
 });
