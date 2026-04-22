@@ -88,11 +88,32 @@ export function AnimatedSignatureCard({
       return [];
     }
 
-    return signature.paths.map((path, index) => ({
+    const segments = signature.paths.map((path, index) => ({
       path,
       bounds: path.bounds ?? viewBoxRect,
       clipId: `signature-reveal-${clipBaseId}-${replayToken}-${index}`,
     }));
+    const minX = Math.min(...segments.map((segment) => segment.bounds.x));
+    const maxRight = Math.max(
+      ...segments.map((segment) => segment.bounds.x + segment.bounds.width),
+    );
+    const totalWidth = Math.max(maxRight - minX, 1);
+
+    return segments.map((segment, index) => {
+      const fallbackStart = index / segments.length;
+      const fallbackWeight = 1 / segments.length;
+      const start = (segment.bounds.x - minX) / totalWidth;
+      const weight = segment.bounds.width / totalWidth;
+
+      return {
+        ...segment,
+        start: Number.isFinite(start) ? start : fallbackStart,
+        weight:
+          Number.isFinite(weight) && weight > 0
+            ? weight
+            : fallbackWeight,
+      };
+    });
   }, [clipBaseId, replayToken, signature, viewBoxRect]);
 
   useGSAP(
@@ -116,22 +137,15 @@ export function AnimatedSignatureCard({
             return;
           }
 
-          const metric = metrics?.segments[index];
-          const start = metric?.start ?? index / fillSegments.length;
-          const segmentWeight =
-            metric?.end && metric?.start !== undefined
-              ? metric.end - metric.start
-              : 1 / fillSegments.length;
-
           gsap.set(rect, { attr: { width: 0 } });
           timeline.to(
             rect,
             {
               attr: { width: segment.bounds.width },
-              duration: Math.max(durationSeconds * segmentWeight, 0.18),
+              duration: Math.max(durationSeconds * segment.weight, 0.22),
               ease: "power3.out",
             },
-            start * durationSeconds,
+            segment.start * durationSeconds,
           );
         });
         return;

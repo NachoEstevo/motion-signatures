@@ -1,6 +1,6 @@
 import opentype from "opentype.js";
 import type { SignaturePath, SignatureVector } from "../types";
-import caveatFontUrl from "typeface-caveat/files/caveat-latin-700.woff";
+import alluraFontUrl from "@fontsource/allura/files/allura-latin-400-normal.woff";
 
 export type FontPath = {
   toPathData: (decimalPlaces?: number) => string;
@@ -245,7 +245,7 @@ async function loadDefaultFont(): Promise<FontLike> {
     return cachedFont;
   }
 
-  const response = await fetch(caveatFontUrl);
+  const response = await fetch(alluraFontUrl);
 
   if (!response.ok) {
     throw new Error("Unable to load the signature font asset");
