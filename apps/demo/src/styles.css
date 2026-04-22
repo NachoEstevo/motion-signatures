@@ -1,0 +1,1531 @@
+:root {
+  font-family:
+    "Cabinet Grotesk", "Outfit", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  color: #111111;
+  background: #f3efe7;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: #f3efe7;
+}
+
+button,
+input,
+a {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.demo-shell {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+  display: grid;
+  grid-auto-rows: max-content;
+  gap: 7rem;
+  padding: 1rem 1.75rem 3rem;
+}
+
+.demo-shell > .nav-wrap + .hero {
+  margin-top: -3.5rem;
+}
+
+.nav-wrap,
+.hero,
+.library-section,
+.studio-shell {
+  width: min(1240px, calc(100vw - 3rem));
+  margin: 0 auto;
+}
+
+.nav-wrap {
+  position: sticky;
+  top: 1.5rem;
+  z-index: 5;
+}
+
+.nav-pill {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.7rem 0.75rem 0.7rem 1.1rem;
+  border-radius: 999px;
+  background: rgba(251, 247, 238, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(22px) saturate(1.6);
+  -webkit-backdrop-filter: blur(22px) saturate(1.6);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(17, 17, 17, 0.04),
+    0 1px 1px rgba(17, 17, 17, 0.04),
+    0 18px 48px rgba(17, 17, 17, 0.08);
+}
+
+.hero-actions,
+.studio-head,
+.studio-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.brand-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #111111;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.brand-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 1.85rem;
+  height: 1.85rem;
+  border-radius: 999px;
+  background: #111111;
+  color: #fbf7ee;
+}
+
+.brand-mark svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.brand-wordmark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.06rem;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.brand-primary {
+  font-weight: 600;
+  color: #111111;
+}
+
+.brand-slash {
+  color: rgba(17, 17, 17, 0.28);
+  font-weight: 500;
+  margin: 0 0.15rem;
+}
+
+.brand-secondary {
+  font-weight: 500;
+  color: rgba(17, 17, 17, 0.6);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: rgba(17, 17, 17, 0.72);
+  font-size: 0.94rem;
+}
+
+.nav-links a {
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
+}
+
+.nav-links a:hover {
+  background: rgba(17, 17, 17, 0.06);
+  color: #111111;
+}
+
+.nav-cta {
+  background: #111111;
+  color: #ffffff !important;
+  padding: 0.55rem 1rem !important;
+}
+
+.nav-cta:hover {
+  background: #1f1f1f !important;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(420px, 1.05fr);
+  gap: 3.25rem;
+  align-items: center;
+  min-height: calc(100svh - 8rem);
+}
+
+.hero-copy {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.section-intro,
+.studio-canvas,
+.studio-shell {
+  display: grid;
+  gap: 1rem;
+}
+
+.eyebrow,
+.flow-label {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: rgba(17, 17, 17, 0.5);
+}
+
+.hero h1,
+.section-intro h2,
+.studio-head h2 {
+  margin: 0;
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+}
+
+.hero h1 {
+  max-width: 15ch;
+  font-size: clamp(3.4rem, 7vw, 6.2rem);
+}
+
+.hero-inline-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 5.1em;
+  height: 1.55em;
+  padding: 0;
+  margin: 0 0.2em;
+  border: none;
+  border-radius: 999px;
+  background:
+    linear-gradient(rgba(17, 17, 17, 0.32), rgba(17, 17, 17, 0.32)),
+    url("https://picsum.photos/seed/signature-pill/320/120") center / cover,
+    #3f3a33;
+  color: #ffffff;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.48em;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  cursor: pointer;
+  vertical-align: baseline;
+  overflow: hidden;
+  box-shadow: 0 8px 18px rgba(17, 17, 17, 0.16);
+  text-shadow: 0 1px 2px rgba(17, 17, 17, 0.35);
+}
+
+.hero-inline-toggle-drawn {
+  font-family: "Caveat", "Dancing Script", "Segoe Script", cursive;
+  font-weight: 700;
+}
+
+.hero-text,
+.section-intro > p:last-child,
+.studio-head p:last-child {
+  margin: 0;
+  max-width: 58ch;
+  font-size: 1.06rem;
+  color: rgba(17, 17, 17, 0.68);
+}
+
+.hero-actions {
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.button-primary,
+.button-secondary,
+.studio-tab {
+  border-radius: 999px;
+  padding: 0.82rem 1.2rem;
+  cursor: pointer;
+  transition:
+    transform 220ms ease,
+    background-color 220ms ease,
+    color 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.button-primary {
+  border: 1px solid #111111;
+  background: #111111;
+  color: #ffffff;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  box-shadow: 0 10px 24px rgba(17, 17, 17, 0.18);
+}
+
+.button-secondary {
+  border: 1px solid rgba(17, 17, 17, 0.18);
+  background: #ffffff;
+  color: #111111;
+}
+
+.button-primary:hover,
+.button-secondary:hover,
+.studio-tab:hover,
+.hero-inline-toggle:hover {
+  transform: translateY(-1px);
+}
+
+.button-primary:hover {
+  box-shadow: 0 14px 30px rgba(17, 17, 17, 0.26);
+  background: #1a1a1a;
+}
+
+.button-primary:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 3px #fbf7ee,
+    0 0 0 5px rgba(17, 17, 17, 0.35);
+}
+
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.95rem 1.35rem 0.95rem 1.55rem;
+  font-size: 1rem;
+  border-radius: 999px;
+  position: relative;
+  isolation: isolate;
+}
+
+.hero-cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.14),
+    rgba(255, 255, 255, 0) 55%
+  );
+  pointer-events: none;
+  z-index: -1;
+}
+
+.hero-cta-label {
+  position: relative;
+}
+
+.hero-cta-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  transition:
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 220ms ease;
+}
+
+.hero-cta:hover .hero-cta-icon {
+  transform: translateX(3px);
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.hero-cta:active {
+  transform: translateY(0);
+}
+
+.preview-pane {
+  position: relative;
+}
+
+
+.contract-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  border: 1px solid rgba(17, 17, 17, 0.14);
+  background: #fbf7ee;
+  background-image:
+    radial-gradient(
+      circle at 0% 0%,
+      rgba(17, 17, 17, 0.04),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 100% 100%,
+      rgba(17, 17, 17, 0.05),
+      transparent 55%
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 40px 80px rgba(17, 17, 17, 0.16),
+    0 18px 32px rgba(17, 17, 17, 0.08);
+  padding: 2.75rem 2.75rem 2.25rem;
+  display: grid;
+  gap: 1.6rem;
+  color: rgba(17, 17, 17, 0.85);
+  font-family: "Iowan Old Style", "Georgia", "Cambria", serif;
+  line-height: 1.55;
+}
+
+.contract-card::before {
+  content: "";
+  position: absolute;
+  inset: 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(17, 17, 17, 0.08);
+  pointer-events: none;
+}
+
+.contract-seal {
+  position: absolute;
+  top: 1.6rem;
+  right: 1.6rem;
+  width: 4.6rem;
+  height: 4.6rem;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  border-radius: 999px;
+  border: 1px solid rgba(17, 17, 17, 0.28);
+  font-family: "Cabinet Grotesk", "Outfit", ui-sans-serif, sans-serif;
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 17, 0.55);
+  transform: rotate(-8deg);
+  pointer-events: none;
+  line-height: 1.3;
+  z-index: 1;
+}
+
+.contract-seal::before {
+  content: "";
+  position: absolute;
+  inset: 0.35rem;
+  border-radius: 999px;
+  border: 1px dashed rgba(17, 17, 17, 0.28);
+}
+
+.contract-head {
+  display: grid;
+  gap: 0.45rem;
+  padding-right: 5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.contract-eyebrow {
+  margin: 0;
+  font-family: "Cabinet Grotesk", "Outfit", ui-sans-serif, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: rgba(17, 17, 17, 0.48);
+}
+
+.contract-title {
+  margin: 0;
+  font-weight: 500;
+  font-size: clamp(2.05rem, 2.6vw, 2.65rem);
+  letter-spacing: -0.018em;
+  line-height: 1;
+}
+
+.contract-stamp {
+  margin: 0;
+  font-style: italic;
+  font-size: 1rem;
+  color: rgba(17, 17, 17, 0.58);
+}
+
+.contract-body {
+  display: grid;
+  gap: 0.95rem;
+  font-size: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.contract-body p {
+  margin: 0;
+}
+
+.contract-lines {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.contract-lines li {
+  height: 0.4rem;
+  border-bottom: 1px solid rgba(17, 17, 17, 0.18);
+}
+
+.contract-lines li:last-child {
+  width: 55%;
+}
+
+.contract-sign {
+  display: grid;
+  gap: 0.7rem;
+  margin-top: 0.35rem;
+  position: relative;
+  z-index: 1;
+}
+
+.contract-sign-surface {
+  position: relative;
+  min-height: 150px;
+  display: grid;
+  place-items: end center;
+  padding: 0 0.75rem 0.5rem;
+}
+
+.contract-sign-surface svg {
+  width: 100%;
+  height: auto;
+  max-height: 170px;
+  display: block;
+}
+
+.contract-sign-surface::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-bottom: 1px solid rgba(17, 17, 17, 0.45);
+}
+
+.contract-sign-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.contract-sign-label {
+  font-family: "Cabinet Grotesk", "Outfit", ui-sans-serif, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.26em;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: rgba(17, 17, 17, 0.5);
+}
+
+.contract-sign-date {
+  font-style: italic;
+  font-size: 1rem;
+  color: rgba(17, 17, 17, 0.62);
+}
+
+.contract-actions {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.6rem;
+  padding-top: 0.25rem;
+  border-top: 1px dashed rgba(17, 17, 17, 0.14);
+  margin-top: 0.4rem;
+}
+
+.contract-actions-label {
+  margin: 0;
+  font-family: "Cabinet Grotesk", "Outfit", ui-sans-serif, sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 17, 0.48);
+}
+
+.contract-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.contract-action-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.95rem;
+  border-radius: 12px;
+  border: 1px solid rgba(17, 17, 17, 0.18);
+  background: rgba(17, 17, 17, 0.04);
+  color: rgba(17, 17, 17, 0.8);
+  font-family: "Cabinet Grotesk", "Outfit", ui-sans-serif, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition:
+    background-color 220ms ease,
+    border-color 220ms ease,
+    color 220ms ease,
+    transform 220ms ease;
+}
+
+.contract-action-button:hover {
+  background: rgba(17, 17, 17, 0.08);
+  border-color: rgba(17, 17, 17, 0.3);
+  color: rgba(17, 17, 17, 0.95);
+  transform: translateY(-1px);
+}
+
+.contract-action-button:focus-visible {
+  outline: 2px solid rgba(17, 17, 17, 0.6);
+  outline-offset: 2px;
+}
+
+.contract-action-button svg {
+  stroke: currentColor;
+}
+
+.library-section {
+  display: grid;
+  gap: 2.5rem;
+}
+
+.section-intro {
+  gap: 1.25rem;
+}
+
+.section-intro h2,
+.studio-head h2 {
+  font-size: clamp(2.5rem, 5vw, 4.2rem);
+  max-width: 14ch;
+}
+
+.use-case-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-auto-flow: dense;
+  gap: 1.25rem;
+}
+
+.use-case-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  border: 1px solid rgba(17, 17, 17, 0.1);
+  background: #ffffff;
+  padding: 1.75rem;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 1.5rem;
+  min-height: 260px;
+  color: rgba(17, 17, 17, 0.78);
+  transition:
+    transform 320ms ease,
+    border-color 320ms ease,
+    box-shadow 320ms ease;
+}
+
+.use-case-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(17, 17, 17, 0.22);
+  box-shadow: 0 24px 48px rgba(17, 17, 17, 0.08);
+}
+
+.card-span-4 {
+  grid-column: span 4;
+}
+
+.card-span-5 {
+  grid-column: span 5;
+}
+
+.card-span-7 {
+  grid-column: span 7;
+}
+
+.card-span-8 {
+  grid-column: span 8;
+}
+
+.card-span-12 {
+  grid-column: span 12;
+}
+
+.card-tall {
+  min-height: 360px;
+}
+
+.card-wide {
+  min-height: 220px;
+}
+
+.use-case-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  min-height: 2.4rem;
+}
+
+.use-case-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 1.9rem;
+  padding: 0 0.72rem;
+  border-radius: 999px;
+  border: 1px solid rgba(17, 17, 17, 0.14);
+  background: rgba(17, 17, 17, 0.04);
+  color: rgba(17, 17, 17, 0.65);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.use-case-badge-active {
+  background: #111111;
+  color: #ffffff;
+  border-color: #111111;
+}
+
+.use-case-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  flex-shrink: 0;
+  border-radius: 12px;
+  border: 1px solid rgba(17, 17, 17, 0.12);
+  background: #fbf7ee;
+  color: #111111;
+}
+
+.use-case-icon svg {
+  width: 62%;
+  height: 62%;
+}
+
+.use-case-body {
+  display: grid;
+  gap: 0.6rem;
+  align-content: end;
+}
+
+.use-case-body h3 {
+  margin: 0;
+  font-size: clamp(1.5rem, 2vw, 1.9rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: #111111;
+}
+
+.use-case-body p {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.5;
+  color: rgba(17, 17, 17, 0.62);
+}
+
+.use-case-foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(17, 17, 17, 0.08);
+}
+
+.use-case-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(17, 17, 17, 0.78);
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: gap 200ms ease, color 200ms ease;
+}
+
+.use-case-link:hover,
+.use-case-card:hover .use-case-link {
+  gap: 0.7rem;
+  color: #111111;
+}
+
+.use-case-link:focus-visible {
+  outline: 2px solid rgba(17, 17, 17, 0.55);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.use-case-extras {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.85rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.use-case-extras li {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(17, 17, 17, 0.12);
+  background: rgba(17, 17, 17, 0.03);
+  color: rgba(17, 17, 17, 0.7);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.use-case-card-featured {
+  background: #fbf7ee;
+  border-color: rgba(17, 17, 17, 0.14);
+  padding: 2rem;
+}
+
+.use-case-featured-preview {
+  display: grid;
+  gap: 1rem;
+  border-top: 1px solid rgba(17, 17, 17, 0.1);
+  padding-top: 1.25rem;
+}
+
+.use-case-featured-preview svg {
+  width: 100%;
+  height: auto;
+  max-height: 140px;
+}
+
+.use-case-cta {
+  justify-self: start;
+}
+
+.card-wide .use-case-body h3 {
+  max-width: 20ch;
+}
+
+.card-wide .use-case-body p {
+  max-width: 58ch;
+}
+
+
+.studio-shell {
+  gap: 1.5rem;
+  padding-top: 1rem;
+}
+
+.studio-head {
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.studio-head > div {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.studio-tabs {
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.studio-canvas {
+  padding-top: 0.5rem;
+}
+
+.studio-tab {
+  border: 1px solid rgba(17, 17, 17, 0.12);
+  background: #ffffff;
+  color: rgba(17, 17, 17, 0.78);
+}
+
+.studio-tab-active {
+  background: #111111;
+  color: #ffffff;
+  border-color: #111111;
+}
+
+.studio-canvas {
+  min-width: 0;
+}
+
+.site-footer {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #0f0f0f;
+  color: rgba(255, 255, 255, 0.78);
+  padding: 5rem 2rem 2.25rem;
+  margin-top: 4rem;
+}
+
+.site-footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.18),
+    transparent
+  );
+}
+
+.site-footer-inner {
+  width: min(1240px, calc(100vw - 3rem));
+  margin: 0 auto;
+  display: grid;
+  gap: 3rem;
+}
+
+.site-footer-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr);
+  gap: 3.5rem;
+  align-items: start;
+}
+
+.site-footer-brand {
+  display: grid;
+  gap: 1.25rem;
+  max-width: 38ch;
+}
+
+.footer-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: #ffffff;
+}
+
+.footer-wordmark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.06rem;
+  font-size: 1.2rem;
+  letter-spacing: -0.02em;
+}
+
+.footer-brand-primary {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.footer-brand-slash {
+  color: rgba(255, 255, 255, 0.35);
+  margin: 0 0.2rem;
+}
+
+.footer-brand-secondary {
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.footer-tagline {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.footer-author {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem 1.05rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+  font-size: 0.92rem;
+  width: fit-content;
+  transition:
+    transform 220ms ease,
+    background-color 220ms ease,
+    border-color 220ms ease;
+}
+
+.footer-author strong {
+  font-weight: 600;
+}
+
+.footer-author:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.site-footer-links {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+.footer-column {
+  display: grid;
+  gap: 0.9rem;
+  align-content: start;
+}
+
+.footer-heading {
+  margin: 0;
+  font-size: 0.68rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.48);
+  font-weight: 700;
+}
+
+.footer-column a {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.96rem;
+  transition: color 200ms ease;
+}
+
+.footer-column a:hover {
+  color: #ffffff;
+}
+
+.site-footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.25rem 1.5rem;
+  padding-top: 2.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.site-footer-name {
+  margin: 0;
+  color: #ffffff;
+  font-family: "Cabinet Grotesk", "Outfit", "Inter", sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.85rem, 9vw, 6.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  white-space: nowrap;
+}
+
+.site-footer-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem 0.9rem;
+  padding-bottom: 0.55rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.site-footer-meta-sep {
+  color: rgba(255, 255, 255, 0.28);
+}
+
+/* Use-case dialog */
+.use-case-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: rgba(17, 17, 17, 0.55);
+  backdrop-filter: blur(10px) saturate(1.2);
+  -webkit-backdrop-filter: blur(10px) saturate(1.2);
+  overflow-y: auto;
+}
+
+.use-case-dialog {
+  position: relative;
+  width: min(720px, 100%);
+  max-height: calc(100svh - 3rem);
+  overflow-y: auto;
+  padding: 2.25rem 2.25rem 1.75rem;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid rgba(17, 17, 17, 0.08);
+  box-shadow:
+    0 40px 80px rgba(17, 17, 17, 0.3),
+    0 12px 24px rgba(17, 17, 17, 0.12);
+  color: rgba(17, 17, 17, 0.82);
+  display: grid;
+  gap: 1.4rem;
+}
+
+.use-case-dialog-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.use-case-dialog-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 1.9rem;
+  padding: 0 0.75rem;
+  border-radius: 999px;
+  background: #111111;
+  color: #ffffff;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.use-case-dialog-close {
+  width: 2.25rem;
+  height: 2.25rem;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(17, 17, 17, 0.14);
+  background: #ffffff;
+  color: rgba(17, 17, 17, 0.65);
+  cursor: pointer;
+  transition:
+    background-color 200ms ease,
+    color 200ms ease,
+    border-color 200ms ease,
+    transform 200ms ease;
+}
+
+.use-case-dialog-close:hover {
+  background: #111111;
+  color: #ffffff;
+  border-color: #111111;
+}
+
+.use-case-dialog-close:focus-visible {
+  outline: 2px solid rgba(17, 17, 17, 0.6);
+  outline-offset: 2px;
+}
+
+.use-case-dialog-title {
+  margin: 0;
+  font-size: clamp(1.75rem, 2.4vw, 2.3rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: #111111;
+}
+
+.use-case-dialog-lede {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: rgba(17, 17, 17, 0.7);
+  max-width: 58ch;
+}
+
+.use-case-dialog-demo {
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  border-radius: 18px;
+  background: #f4ece0;
+  border: 1px solid rgba(17, 17, 17, 0.08);
+}
+
+.use-case-dialog-demo svg {
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+}
+
+.use-case-dialog-sections {
+  display: grid;
+  gap: 0.9rem;
+  margin: 0;
+}
+
+.use-case-dialog-section {
+  display: grid;
+  grid-template-columns: minmax(0, 10rem) minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-top: 1px solid rgba(17, 17, 17, 0.08);
+}
+
+.use-case-dialog-section:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.use-case-dialog-section dt {
+  font-family: "Cabinet Grotesk", "Outfit", ui-sans-serif, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 17, 0.55);
+  margin: 0;
+  padding-top: 0.15rem;
+}
+
+.use-case-dialog-section dd {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: rgba(17, 17, 17, 0.78);
+}
+
+.use-case-dialog-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(17, 17, 17, 0.08);
+}
+
+.use-case-dialog-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.use-case-dialog-tag {
+  display: inline-flex;
+  align-items: center;
+  height: 1.7rem;
+  padding: 0 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(17, 17, 17, 0.12);
+  background: #fbf7ee;
+  color: rgba(17, 17, 17, 0.72);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.use-case-dialog-cta {
+  padding: 0.72rem 1.1rem;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 1080px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-pane {
+    max-width: 560px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .contract-card {
+    padding: 2.25rem 2.25rem 1.85rem;
+    gap: 1.35rem;
+  }
+
+  .contract-seal {
+    width: 4rem;
+    height: 4rem;
+    top: 1.2rem;
+    right: 1.2rem;
+    font-size: 0.5rem;
+  }
+
+  .contract-head {
+    padding-right: 4.25rem;
+  }
+
+  .contract-sign-surface {
+    min-height: 130px;
+  }
+
+  .contract-sign-surface svg {
+    max-height: 150px;
+  }
+
+  .card-span-4,
+  .card-span-5,
+  .card-span-7,
+  .card-span-8,
+  .card-span-12 {
+    grid-column: span 12;
+  }
+
+  .card-tall {
+    min-height: 260px;
+  }
+
+  .site-footer-top {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+}
+
+@media (max-width: 760px) {
+  .preview-pane {
+    display: none;
+  }
+
+  .demo-shell {
+    gap: 6rem;
+    padding-inline: 1rem;
+  }
+
+  .nav-wrap,
+  .hero,
+  .library-section,
+  .studio-shell,
+  .site-footer {
+    width: min(1240px, calc(100vw - 2rem));
+  }
+
+  .site-footer {
+    padding: 2.5rem 1.5rem 1.5rem;
+  }
+
+  .site-footer-links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .site-footer-meta {
+    justify-content: flex-start;
+  }
+
+  .studio-head,
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .nav-pill {
+    gap: 0.5rem;
+    padding: 0.5rem 0.55rem 0.5rem 0.75rem;
+  }
+
+  .brand-mark {
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+
+  .brand-mark svg {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
+
+  .brand-wordmark {
+    font-size: 0.92rem;
+  }
+
+  .brand-slash,
+  .brand-secondary {
+    display: none;
+  }
+
+  .nav-links {
+    gap: 0.1rem;
+    font-size: 0.85rem;
+    flex-wrap: nowrap;
+  }
+
+  .nav-links a {
+    padding: 0.45rem 0.7rem;
+  }
+
+  .nav-cta {
+    padding: 0.45rem 0.85rem !important;
+  }
+
+  .hero h1 {
+    max-width: 11ch;
+  }
+
+  .contract-card {
+    padding: 1.75rem 1.5rem 1.4rem;
+    gap: 1.1rem;
+    border-radius: 18px;
+  }
+
+  .contract-card::before {
+    inset: 10px;
+    border-radius: 12px;
+  }
+
+  .contract-seal {
+    width: 3.4rem;
+    height: 3.4rem;
+    top: 0.9rem;
+    right: 0.9rem;
+    font-size: 0.46rem;
+    letter-spacing: 0.22em;
+    transform: rotate(-6deg);
+  }
+
+  .contract-head {
+    padding-right: 3.6rem;
+  }
+
+  .contract-title {
+    font-size: clamp(1.55rem, 6.2vw, 1.95rem);
+  }
+
+  .contract-stamp {
+    font-size: 0.9rem;
+  }
+
+  .contract-body {
+    font-size: 0.92rem;
+  }
+
+  .contract-body p {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .contract-lines li:first-child {
+    display: none;
+  }
+
+  .contract-sign-surface {
+    min-height: 100px;
+    padding: 0 0.25rem 0.4rem;
+  }
+
+  .contract-sign-surface svg {
+    max-height: 120px;
+  }
+
+  .contract-sign-meta {
+    flex-direction: column;
+    gap: 0.2rem;
+    align-items: flex-start;
+  }
+
+  .contract-actions-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.45rem;
+  }
+
+  .contract-action-button {
+    justify-content: center;
+    padding: 0.7rem 0.9rem;
+  }
+
+  .use-case-dialog {
+    padding: 1.6rem 1.35rem 1.4rem;
+    gap: 1.1rem;
+    border-radius: 20px;
+  }
+
+  .use-case-dialog-section {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+    padding: 0.7rem 0;
+  }
+
+  .use-case-dialog-foot {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .use-case-dialog-cta {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .site-footer {
+    padding: 3.5rem 1.25rem 2rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .nav-pill {
+    gap: 0.35rem;
+    padding: 0.45rem 0.5rem;
+  }
+
+  .brand-wordmark {
+    display: none;
+  }
+
+  .nav-links {
+    font-size: 0.82rem;
+  }
+
+  .nav-links a:not(.nav-cta) {
+    padding: 0.4rem 0.55rem;
+  }
+
+  .nav-cta {
+    padding: 0.4rem 0.75rem !important;
+  }
+
+  .contract-card {
+    padding: 1.4rem 1.15rem 1.2rem;
+  }
+
+  .contract-seal {
+    display: none;
+  }
+
+  .contract-head {
+    padding-right: 0;
+  }
+
+  .contract-lines {
+    display: none;
+  }
+
+  .contract-sign-surface {
+    min-height: 84px;
+  }
+
+  .contract-sign-surface svg {
+    max-height: 100px;
+  }
+}

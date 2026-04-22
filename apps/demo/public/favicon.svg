@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Motion Signatures">
+  <rect width="32" height="32" rx="8" fill="#111111"/>
+  <path d="M5 20c2.4-7.2 4.2-8.4 6.8-3.6 2 3.8 3.8 3.2 5.6-3.2 1.8-5.8 4.2-4.6 6 1.6" fill="none" stroke="#FBF7EE" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="25.6" cy="21.2" r="1.4" fill="#FBF7EE"/>
+</svg>

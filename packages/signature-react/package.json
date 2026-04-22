@@ -1,0 +1,31 @@
+{
+  "name": "@signature/react",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --splitting false --external react,react-dom --loader .woff=file --loader .css=css",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "opentype.js": "^1.3.4",
+    "svg-path-properties": "^2.0.2",
+    "typeface-caveat": "^1.1.13"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}
