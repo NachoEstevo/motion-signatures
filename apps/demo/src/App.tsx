@@ -13,8 +13,8 @@ import "./styles.css";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-const DRAWN_TRACE_DURATION_MS = 2300;
-const TYPED_TRACE_DURATION_MS = 1800;
+const DRAWN_TRACE_DURATION_MS = 3400;
+const TYPED_TRACE_DURATION_MS = 2400;
 
 const FEATURED_NAME = "Nacho Estevo";
 

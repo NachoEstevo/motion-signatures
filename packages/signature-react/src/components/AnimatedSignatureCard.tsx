@@ -102,7 +102,7 @@ export function AnimatedSignatureCard({
         gsap.to(rect, {
           attr: { width: viewBoxRect.width },
           duration: durationSeconds,
-          ease: "power2.out",
+          ease: "power3.out",
         });
         return;
       }
@@ -126,7 +126,7 @@ export function AnimatedSignatureCard({
           {
             strokeDashoffset: 0,
             duration: Math.max(durationSeconds * (segment.end - segment.start), 0.08),
-            ease: "power2.out",
+            ease: "power3.out",
           },
           segment.start * durationSeconds,
         );

@@ -70,8 +70,13 @@ export async function nameToPath(
     (height - padding * 2) / rawHeight,
   );
   const fontSize = DEFAULT_FONT_SIZE * scale;
-  const offsetX = padding - previewBounds.x1 * scale;
-  const baseline = padding + rawHeight * scale - previewBounds.y1 * scale;
+  const renderedWidth = rawWidth * scale;
+  const renderedHeight = rawHeight * scale;
+  const horizontalSlack = Math.max(0, width - padding * 2 - renderedWidth);
+  const verticalSlack = Math.max(0, height - padding * 2 - renderedHeight);
+  const offsetX = padding + horizontalSlack / 2 - previewBounds.x1 * scale;
+  const baseline =
+    padding + verticalSlack / 2 - previewBounds.y1 * scale;
   const finalPath = font.getPath(trimmedName, offsetX, baseline, fontSize);
 
   return {
