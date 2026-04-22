@@ -18,6 +18,20 @@ export type AnimatedSignatureCardProps = {
   renderMode?: SignatureRenderMode;
 };
 
+type FillPlaybackSegment = {
+  x: number;
+  width: number;
+  start: number;
+  weight: number;
+  ease: "none" | "power3.out";
+};
+
+type StrokePlaybackSegment = {
+  start: number;
+  end: number;
+  ease: "none" | "power3.out";
+};
+
 type ViewBoxRect = {
   x: number;
   y: number;
@@ -39,6 +53,114 @@ function parseViewBox(viewBox: string, fallbackWidth: number, fallbackHeight: nu
       ? (rawH as number)
       : fallbackHeight;
   return { x, y, width, height };
+}
+
+export function getFillPlaybackSegments(
+  segments: Array<{ x: number; width: number }>,
+): FillPlaybackSegment[] {
+  if (segments.length === 0) {
+    return [];
+  }
+
+  const minX = Math.min(...segments.map((segment) => segment.x));
+  const maxRight = Math.max(...segments.map((segment) => segment.x + segment.width));
+  const totalWidth = Math.max(maxRight - minX, 1);
+
+  return segments.map((segment, index) => {
+    const fallbackStart = index / segments.length;
+    const fallbackWeight = 1 / segments.length;
+    const start = (segment.x - minX) / totalWidth;
+    const weight = segment.width / totalWidth;
+
+    return {
+      ...segment,
+      start: Number.isFinite(start) ? start : fallbackStart,
+      weight:
+        Number.isFinite(weight) && weight > 0
+          ? weight
+          : fallbackWeight,
+      ease: index === segments.length - 1 ? "power3.out" : "none",
+    };
+  });
+}
+
+export function getStrokePlaybackSegments(
+  segments: Array<{ start: number; end: number }>,
+): StrokePlaybackSegment[] {
+  return segments.map((segment, index) => ({
+    ...segment,
+    ease: index === segments.length - 1 ? "power3.out" : "none",
+  }));
+}
+
+function buildSignatureSvg(signature: SignatureVector, renderMode: SignatureRenderMode): string {
+  const filled = renderMode === "fill";
+  const inner = signature.paths
+    .map((path) =>
+      filled
+        ? `<path d="${path.d}" fill="#0f172a"/>`
+        : `<path d="${path.d}" fill="none" stroke="#0f172a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`,
+    )
+    .join("");
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${signature.viewBox}" width="${signature.width}" height="${signature.height}">${inner}</svg>`;
+}
+
+function downloadBlob(blob: Blob, filename: string): void {
+  const objectUrl = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = objectUrl;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(objectUrl);
+}
+
+function slugifyFilename(value: string): string {
+  const slug = value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  return slug || "signature";
+}
+
+async function exportSignaturePng(
+  signature: SignatureVector,
+  renderMode: SignatureRenderMode,
+  filename: string,
+): Promise<void> {
+  const svgMarkup = buildSignatureSvg(signature, renderMode);
+  const image = new Image();
+  const svgUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgMarkup)}`;
+
+  await new Promise<void>((resolve, reject) => {
+    image.onload = () => resolve();
+    image.onerror = () => reject(new Error("Unable to render signature PNG."));
+    image.src = svgUrl;
+  });
+
+  const canvas = document.createElement("canvas");
+  canvas.width = signature.width;
+  canvas.height = signature.height;
+  const context = canvas.getContext("2d");
+
+  if (!context) {
+    throw new Error("Unable to create PNG export context.");
+  }
+
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+  const blob = await new Promise<Blob | null>((resolve) => {
+    canvas.toBlob(resolve, "image/png");
+  });
+
+  if (!blob) {
+    throw new Error("Unable to create PNG export blob.");
+  }
+
+  downloadBlob(blob, filename);
 }
 
 /**
@@ -93,27 +215,16 @@ export function AnimatedSignatureCard({
       bounds: path.bounds ?? viewBoxRect,
       clipId: `signature-reveal-${clipBaseId}-${replayToken}-${index}`,
     }));
-    const minX = Math.min(...segments.map((segment) => segment.bounds.x));
-    const maxRight = Math.max(
-      ...segments.map((segment) => segment.bounds.x + segment.bounds.width),
+    const playback = getFillPlaybackSegments(
+      segments.map((segment) => ({ x: segment.bounds.x, width: segment.bounds.width })),
     );
-    const totalWidth = Math.max(maxRight - minX, 1);
 
-    return segments.map((segment, index) => {
-      const fallbackStart = index / segments.length;
-      const fallbackWeight = 1 / segments.length;
-      const start = (segment.bounds.x - minX) / totalWidth;
-      const weight = segment.bounds.width / totalWidth;
-
-      return {
-        ...segment,
-        start: Number.isFinite(start) ? start : fallbackStart,
-        weight:
-          Number.isFinite(weight) && weight > 0
-            ? weight
-            : fallbackWeight,
-      };
-    });
+    return segments.map((segment, index) => ({
+      ...segment,
+      start: playback[index]?.start ?? index / segments.length,
+      weight: playback[index]?.weight ?? 1 / segments.length,
+      ease: playback[index]?.ease ?? "none",
+    }));
   }, [clipBaseId, replayToken, signature, viewBoxRect]);
 
   useGSAP(
@@ -143,7 +254,7 @@ export function AnimatedSignatureCard({
             {
               attr: { width: segment.bounds.width },
               duration: Math.max(durationSeconds * segment.weight, 0.22),
-              ease: "power3.out",
+              ease: segment.ease,
             },
             segment.start * durationSeconds,
           );
@@ -152,6 +263,7 @@ export function AnimatedSignatureCard({
       }
 
       const timeline = gsap.timeline();
+      const strokePlayback = getStrokePlaybackSegments(metrics.segments);
 
       metrics.segments.forEach((segment, index) => {
         const path = pathRefs.current[index];
@@ -170,7 +282,7 @@ export function AnimatedSignatureCard({
           {
             strokeDashoffset: 0,
             duration: Math.max(durationSeconds * (segment.end - segment.start), 0.08),
-            ease: "power3.out",
+            ease: strokePlayback[index]?.ease ?? "none",
           },
           segment.start * durationSeconds,
         );
@@ -186,23 +298,84 @@ export function AnimatedSignatureCard({
   return (
     <SignatureCard
       actions={
-        <button
-          disabled={!signature}
-          onClick={() => setManualReplayCount((currentValue) => currentValue + 1)}
+        <div
           style={{
-            border: "none",
-            borderRadius: "999px",
-            padding: "0.7rem 1rem",
-            background: "#0f172a",
-            color: "#f8fafc",
-            cursor: signature ? "pointer" : "not-allowed",
-            opacity: signature ? 1 : 0.48,
-            fontWeight: 600,
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "flex-end",
+            gap: "0.65rem",
           }}
-          type="button"
         >
-          Replay animation
-        </button>
+          <button
+            disabled={!signature}
+            onClick={() => setManualReplayCount((currentValue) => currentValue + 1)}
+            style={{
+              border: "none",
+              borderRadius: "999px",
+              padding: "0.7rem 1rem",
+              background: "#0f172a",
+              color: "#f8fafc",
+              cursor: signature ? "pointer" : "not-allowed",
+              opacity: signature ? 1 : 0.48,
+              fontWeight: 600,
+            }}
+            type="button"
+          >
+            Replay animation
+          </button>
+          <button
+            disabled={!signature}
+            onClick={() => {
+              if (!signature) {
+                return;
+              }
+              const svgMarkup = buildSignatureSvg(signature, renderMode);
+              downloadBlob(
+                new Blob([svgMarkup], { type: "image/svg+xml;charset=utf-8" }),
+                `${slugifyFilename(title)}.svg`,
+              );
+            }}
+            style={{
+              border: "1px solid rgba(15, 23, 42, 0.12)",
+              borderRadius: "999px",
+              padding: "0.7rem 1rem",
+              background: "#ffffff",
+              color: "#0f172a",
+              cursor: signature ? "pointer" : "not-allowed",
+              opacity: signature ? 1 : 0.48,
+              fontWeight: 600,
+            }}
+            type="button"
+          >
+            Download SVG
+          </button>
+          <button
+            disabled={!signature}
+            onClick={() => {
+              if (!signature) {
+                return;
+              }
+              void exportSignaturePng(
+                signature,
+                renderMode,
+                `${slugifyFilename(title)}.png`,
+              );
+            }}
+            style={{
+              border: "1px solid rgba(15, 23, 42, 0.12)",
+              borderRadius: "999px",
+              padding: "0.7rem 1rem",
+              background: "#ffffff",
+              color: "#0f172a",
+              cursor: signature ? "pointer" : "not-allowed",
+              opacity: signature ? 1 : 0.48,
+              fontWeight: 600,
+            }}
+            type="button"
+          >
+            Download PNG
+          </button>
+        </div>
       }
       description={description}
       title={title}

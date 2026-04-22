@@ -531,6 +531,15 @@ a {
   display: block;
 }
 
+.contract-sign-image {
+  width: 100%;
+  height: auto;
+  max-height: 132px;
+  display: block;
+  object-fit: contain;
+  object-position: center;
+}
+
 .contract-sign-surface::after {
   content: "";
   position: absolute;
@@ -1330,13 +1339,17 @@ a {
   .nav-wrap,
   .hero,
   .library-section,
-  .studio-shell,
-  .site-footer {
+  .studio-shell {
     width: min(1240px, calc(100vw - 2rem));
   }
 
   .site-footer {
+    width: 100%;
     padding: 2.5rem 1.5rem 1.5rem;
+  }
+
+  .site-footer-inner {
+    width: min(1240px, calc(100vw - 2rem));
   }
 
   .site-footer-links {
@@ -1457,6 +1470,10 @@ a {
     max-height: 120px;
   }
 
+  .contract-sign-image {
+    max-height: 100px;
+  }
+
   .contract-sign-meta {
     flex-direction: column;
     gap: 0.2rem;
@@ -1498,6 +1515,10 @@ a {
 
   .site-footer {
     padding: 3.5rem 1.25rem 2rem;
+  }
+
+  .site-footer-inner {
+    width: calc(100vw - 2.5rem);
   }
 }
 
@@ -1545,5 +1566,9 @@ a {
 
   .contract-sign-surface svg {
     max-height: 100px;
+  }
+
+  .contract-sign-image {
+    max-height: 86px;
   }
 }

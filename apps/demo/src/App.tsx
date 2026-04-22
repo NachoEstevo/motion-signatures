@@ -12,8 +12,8 @@ import "./styles.css";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-const DRAWN_TRACE_DURATION_MS = 3600;
-const TYPED_TRACE_DURATION_MS = 3400;
+const DRAWN_TRACE_DURATION_MS = 4300;
+const TYPED_TRACE_DURATION_MS = 3900;
 
 const DRAWN_FEATURED: SignatureVector = {
   width: 420,
@@ -37,7 +37,15 @@ const TYPED_FEATURED_FALLBACK: SignatureVector = {
   viewBox: "0 0 420 160",
   paths: [
     {
-      d: "M 32 104 C 36 70 50 62 62 84 C 68 98 60 114 56 110 C 52 106 62 86 82 82 C 102 78 114 92 106 102 C 100 110 106 94 128 88 C 150 82 162 96 152 106 C 146 112 156 96 180 90 C 204 84 216 96 208 106 C 202 112 214 96 238 90 C 262 84 276 96 266 106 C 260 112 270 98 292 92 C 316 86 330 100 322 112 C 316 118 324 100 342 96 C 360 92 372 102 368 114",
+      d: "M 18 112 C 20 82 34 64 52 68 C 66 72 68 92 56 104 C 44 118 22 122 16 110 C 10 96 24 74 48 58 C 74 42 108 46 112 66 C 114 82 94 92 86 82 C 78 70 94 50 118 36 C 122 34 126 34 128 38 C 130 42 126 50 122 56 C 116 68 110 82 106 98 C 102 114 104 120 112 118 C 122 116 132 100 142 82 C 156 56 172 54 182 70 C 190 84 182 104 166 112 C 152 118 136 112 134 98 C 132 82 148 64 176 58 C 204 52 226 60 228 80 C 230 102 212 116 196 114 C 182 112 176 96 184 84 C 194 68 216 46 244 36 C 266 28 292 30 300 46 C 304 54 300 58 294 56 C 286 54 280 44 286 34 C 292 24 304 16 316 16 C 324 16 328 20 326 28 C 324 36 316 46 308 56 C 298 72 294 88 296 102 C 298 114 308 118 320 112 C 336 104 352 84 366 62 C 372 52 378 42 386 34 C 390 30 396 30 398 34 C 400 38 396 46 390 56 C 380 74 374 90 374 104 C 374 116 382 122 396 118 C 404 116 410 112 414 108",
+      length: 0,
+    },
+    {
+      d: "M 290 20 C 294 12 300 8 306 8",
+      length: 0,
+    },
+    {
+      d: "M 396 118 C 404 120 414 120 420 116",
       length: 0,
     },
   ],
@@ -388,7 +396,7 @@ export default function App() {
   const featuredMode = activeMode;
   const featuredSignature =
     featuredMode === "draw" ? DRAWN_FEATURED : TYPED_FEATURED_FALLBACK;
-  const featuredIsFilled = featuredMode === "type";
+  const featuredIsFilled = false;
   const featuredTitle =
     featuredMode === "draw" ? "Drawn signature trace" : "Typed signature trace";
   const featuredFileStem =
@@ -727,22 +735,30 @@ export default function App() {
             </div>
             <div className="contract-sign">
               <div className="contract-sign-surface">
-                <svg
-                  viewBox={featuredSignature.viewBox}
-                  preserveAspectRatio="xMidYMid meet"
-                >
-                  {featuredSignature.paths.map((path) => (
-                    <path
-                      key={path.d}
-                      d={path.d}
-                      fill={featuredIsFilled ? "#111111" : "none"}
-                      stroke={featuredIsFilled ? "none" : "#111111"}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={featuredIsFilled ? undefined : 3.6}
-                    />
-                  ))}
-                </svg>
+                {featuredMode === "type" ? (
+                  <img
+                    alt="Typed signature preview"
+                    className="contract-sign-image"
+                    src="/typed-hero.png"
+                  />
+                ) : (
+                  <svg
+                    viewBox={featuredSignature.viewBox}
+                    preserveAspectRatio="xMidYMid meet"
+                  >
+                    {featuredSignature.paths.map((path) => (
+                      <path
+                        key={path.d}
+                        d={path.d}
+                        fill={featuredIsFilled ? "#111111" : "none"}
+                        stroke={featuredIsFilled ? "none" : "#111111"}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={featuredIsFilled ? undefined : 3.6}
+                      />
+                    ))}
+                  </svg>
+                )}
               </div>
               <div className="contract-sign-meta">
                 <span className="contract-sign-label">Signed</span>

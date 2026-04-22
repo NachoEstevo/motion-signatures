@@ -1,6 +1,10 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { AnimatedSignatureCard } from "@signature/react-internal/components/AnimatedSignatureCard";
+import {
+  AnimatedSignatureCard,
+  getFillPlaybackSegments,
+  getStrokePlaybackSegments,
+} from "@signature/react-internal/components/AnimatedSignatureCard";
 
 describe("AnimatedSignatureCard", () => {
   it("shows an empty state when no signature is available", () => {
@@ -91,6 +95,59 @@ describe("AnimatedSignatureCard", () => {
 
     // Assert
     expect(screen.getAllByTestId("signature-fill-segment")).toHaveLength(2);
+  });
+
+  it("renders export controls alongside replay actions", () => {
+    // Arrange
+    render(
+      <AnimatedSignatureCard
+        signature={{
+          width: 320,
+          height: 120,
+          viewBox: "0 0 320 120",
+          paths: [{ d: "M 0 0 L 100 0", length: 0 }],
+        }}
+      />,
+    );
+
+    // Assert
+    expect(screen.getByRole("button", { name: "Replay animation" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Download SVG" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Download PNG" })).toBeVisible();
+  });
+
+  it("uses linear timing through middle glyphs and eases out on the last fill segment", () => {
+    // Arrange
+    const segments = [
+      { x: 10, width: 80 },
+      { x: 110, width: 70 },
+      { x: 205, width: 90 },
+    ];
+
+    // Act
+    const result = getFillPlaybackSegments(segments);
+
+    // Assert
+    expect(result[0]?.ease).toBe("none");
+    expect(result[1]?.ease).toBe("none");
+    expect(result[2]?.ease).toBe("power3.out");
+  });
+
+  it("uses linear timing through middle stroke segments and eases out on the last one", () => {
+    // Arrange
+    const segments = [
+      { start: 0, end: 0.2 },
+      { start: 0.2, end: 0.7 },
+      { start: 0.7, end: 1 },
+    ];
+
+    // Act
+    const result = getStrokePlaybackSegments(segments);
+
+    // Assert
+    expect(result[0]?.ease).toBe("none");
+    expect(result[1]?.ease).toBe("none");
+    expect(result[2]?.ease).toBe("power3.out");
   });
 
   it("restarts the animation timeline when replay is pressed", () => {
