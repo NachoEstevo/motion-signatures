@@ -1,28 +1,28 @@
 import { useState } from "react";
-import type { FontLike } from "../vectorize/nameToPath";
+import type { StrokeFont } from "../vectorize/nameToStrokePath";
 import type { SignatureVector } from "../types";
 import { AnimatedSignatureCard } from "./AnimatedSignatureCard";
 import { SignatureNameField } from "./SignatureNameField";
 
 export type TypedSignatureCardProps = {
-  loadFont?: () => Promise<FontLike>;
+  font?: StrokeFont;
   restartToken?: number;
   durationMs?: number;
 };
 
 /**
  * Combines typed-name capture with the animated preview card.
- * The typed signature is revealed glyph-by-glyph from left to right
- * so it reads like a calm handwritten signing motion.
+ * The typed signature is drawn stroke-by-stroke using a single-line
+ * handwriting font, so each glyph traces itself as if written by hand.
  *
- * @param props Optional font loader override and animation timing.
+ * @param props Optional font override and animation timing.
  * @returns A complete typed-signature generation flow.
  *
  * @example
- * <TypedSignatureCard durationMs={1800} />
+ * <TypedSignatureCard durationMs={2400} />
  */
 export function TypedSignatureCard({
-  loadFont,
+  font,
   restartToken = 0,
   durationMs,
 }: TypedSignatureCardProps) {
@@ -35,11 +35,11 @@ export function TypedSignatureCard({
         gap: "1rem",
       }}
     >
-      <SignatureNameField loadFont={loadFont} onChange={setSignature} />
+      <SignatureNameField font={font} onChange={setSignature} />
       <AnimatedSignatureCard
-        description="Generate a signature-style SVG from a typed name and replay its trace."
+        description="Generate a single-stroke signature from a typed name and replay it."
         durationMs={durationMs}
-        renderMode="fill"
+        renderMode="stroke"
         restartToken={restartToken}
         signature={signature}
         title="Typed signature"

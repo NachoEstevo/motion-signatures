@@ -13,4 +13,10 @@ export { SignaturePad } from "./components/SignaturePad";
 export { SignaturePadCard } from "./components/SignaturePadCard";
 export { TypedSignatureCard } from "./components/TypedSignatureCard";
 export { nameToPath } from "./vectorize/nameToPath";
+export {
+  nameToStrokePath,
+  getDefaultStrokeFont,
+  type StrokeFont,
+  type StrokeFontGlyph,
+} from "./vectorize/nameToStrokePath";
 export { strokeToPath } from "./vectorize/strokeToPath";

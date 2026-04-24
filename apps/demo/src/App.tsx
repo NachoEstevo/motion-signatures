@@ -13,7 +13,7 @@ import "./styles.css";
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 const DRAWN_TRACE_DURATION_MS = 4300;
-const TYPED_TRACE_DURATION_MS = 3900;
+const TYPED_TRACE_DURATION_MS = 2400;
 
 const DRAWN_FEATURED: SignatureVector = {
   width: 420,

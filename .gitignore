@@ -48,3 +48,6 @@ Desktop.ini
 
 # Vite local overrides
 *.local
+
+# Claude Code local settings
+.claude/

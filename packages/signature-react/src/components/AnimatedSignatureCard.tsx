@@ -26,10 +26,18 @@ type FillPlaybackSegment = {
   ease: "none" | "power3.out";
 };
 
+type StrokePlaybackEase = "none" | "power1.inOut" | "power2.out" | "power3.out";
+
 type StrokePlaybackSegment = {
   start: number;
   end: number;
-  ease: "none" | "power3.out";
+  ease: StrokePlaybackEase;
+};
+
+export type StrokeTimelineEntry = {
+  offsetSec: number;
+  durationSec: number;
+  ease: StrokePlaybackEase;
 };
 
 type ViewBoxRect = {
@@ -87,10 +95,78 @@ export function getFillPlaybackSegments(
 export function getStrokePlaybackSegments(
   segments: Array<{ start: number; end: number }>,
 ): StrokePlaybackSegment[] {
+  const lastIndex = segments.length - 1;
   return segments.map((segment, index) => ({
     ...segment,
-    ease: index === segments.length - 1 ? "power3.out" : "none",
+    ease: index === lastIndex ? "power3.out" : "none",
   }));
+}
+
+const FINAL_STROKE_WEIGHT = 1.45;
+
+/**
+ * Arranges stroke segments sequentially in time with pen-lift pauses between
+ * glyphs so the replay reads like a hand writing each letter in turn.
+ *
+ * The last stroke gets a slightly enlarged time slice and no leading gap, so
+ * motion flows continuously into a pronounced ease-out at the end.
+ * Gaps are absorbed from the total duration budget so the caller's durationMs
+ * still represents the overall animation length.
+ *
+ * @param segments Normalized stroke segments (start/end in [0,1]).
+ * @param options Total duration and pen-lift gap in seconds.
+ * @returns Per-segment absolute offset, draw duration, and easing.
+ */
+export function layoutStrokeTimeline(
+  segments: Array<{ start: number; end: number }>,
+  options: { durationSec: number; gapSec: number },
+): StrokeTimelineEntry[] {
+  const eased = getStrokePlaybackSegments(segments);
+  const lastIndex = segments.length - 1;
+  const gapCount = Math.max(0, segments.length - 2);
+  const totalGap = gapCount * options.gapSec;
+  const minDrawShare = options.durationSec * 0.7;
+  const drawBudget = Math.max(options.durationSec - totalGap, minDrawShare);
+
+  const weightedProportions = segments.map((segment, index) => {
+    const raw = Math.max(segment.end - segment.start, 0);
+    return index === lastIndex && segments.length > 1
+      ? raw * FINAL_STROKE_WEIGHT
+      : raw;
+  });
+  const weightSum = weightedProportions.reduce((sum, value) => sum + value, 0);
+  const weightScale = weightSum > 0 ? 1 / weightSum : 0;
+
+  const entries: StrokeTimelineEntry[] = [];
+  let cursor = 0;
+
+  segments.forEach((_, index) => {
+    const durationSec = Math.max(
+      drawBudget * (weightedProportions[index] ?? 0) * weightScale,
+      0.08,
+    );
+    entries.push({
+      offsetSec: cursor,
+      durationSec,
+      ease: eased[index]?.ease ?? "none",
+    });
+    const isBeforeFinale = index === lastIndex - 1;
+    const gapAfter = index < lastIndex && !isBeforeFinale ? options.gapSec : 0;
+    cursor += durationSec + gapAfter;
+  });
+
+  return entries;
+}
+
+function resolveGapSec(durationMs: number, segmentCount: number): number {
+  if (segmentCount <= 2) {
+    return 0;
+  }
+  const baseGapMs = 45;
+  const maxTotalGapMs = durationMs * 0.2;
+  const gapCount = segmentCount - 2;
+  const totalGapMs = Math.min(baseGapMs * gapCount, maxTotalGapMs);
+  return gapCount > 0 ? totalGapMs / gapCount / 1000 : 0;
 }
 
 function buildSignatureSvg(signature: SignatureVector, renderMode: SignatureRenderMode): string {
@@ -205,6 +281,14 @@ export function AnimatedSignatureCard({
   }, [signature]);
 
   const isFill = renderMode === "fill";
+  const strokeTimeline = useMemo<StrokeTimelineEntry[]>(() => {
+    if (!metrics || renderMode !== "stroke") {
+      return [];
+    }
+    const durationSec = Math.max(durationMs / 1000, 0.2);
+    const gapSec = resolveGapSec(durationMs, metrics.segments.length);
+    return layoutStrokeTimeline(metrics.segments, { durationSec, gapSec });
+  }, [durationMs, metrics, renderMode]);
   const fillSegments = useMemo(() => {
     if (!signature || !viewBoxRect) {
       return [];
@@ -263,12 +347,12 @@ export function AnimatedSignatureCard({
       }
 
       const timeline = gsap.timeline();
-      const strokePlayback = getStrokePlaybackSegments(metrics.segments);
 
       metrics.segments.forEach((segment, index) => {
         const path = pathRefs.current[index];
+        const entry = strokeTimeline[index];
 
-        if (!path) {
+        if (!path || !entry) {
           return;
         }
 
@@ -281,16 +365,16 @@ export function AnimatedSignatureCard({
           path,
           {
             strokeDashoffset: 0,
-            duration: Math.max(durationSeconds * (segment.end - segment.start), 0.08),
-            ease: strokePlayback[index]?.ease ?? "none",
+            duration: entry.durationSec,
+            ease: entry.ease,
           },
-          segment.start * durationSeconds,
+          entry.offsetSec,
         );
       });
     },
     {
       scope: frameRef,
-      dependencies: [metrics, replayToken, durationMs, renderMode],
+      dependencies: [metrics, replayToken, durationMs, renderMode, strokeTimeline],
       revertOnUpdate: true,
     },
   );
@@ -444,7 +528,7 @@ export function AnimatedSignatureCard({
                       : {
                           strokeDasharray: `${segment.length}`,
                           strokeDashoffset: `${segment.length}`,
-                          animationDelay: `${segment.start * durationMs}ms`,
+                          animationDelay: `${Math.round((strokeTimeline[index]?.offsetSec ?? 0) * 1000)}ms`,
                         }
                   }
                 />

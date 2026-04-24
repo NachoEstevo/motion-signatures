@@ -17,12 +17,16 @@
   ],
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts --splitting false --external react,react-dom --loader .woff=file --loader .css=css",
+    "extract-font": "node scripts/extract-ems-allure.mjs",
     "test": "vitest run"
   },
   "dependencies": {
     "@fontsource/allura": "^5.2.8",
     "opentype.js": "^1.3.4",
     "svg-path-properties": "^2.0.2"
+  },
+  "devDependencies": {
+    "hersheytext": "^2.0.0"
   },
   "peerDependencies": {
     "react": "^19.0.0",

@@ -15,7 +15,7 @@ describe("AnimatedSignatureCard", () => {
     expect(screen.getByText("Your signature preview will appear here.")).toBeVisible();
   });
 
-  it("assigns reveal timing to each SVG path", () => {
+  it("delays each stroke so glyphs are drawn sequentially and the final one flows in", () => {
     // Arrange
     render(
       <AnimatedSignatureCard
@@ -39,10 +39,11 @@ describe("AnimatedSignatureCard", () => {
       strokeDasharray: "100",
       animationDelay: "0ms",
     });
-    expect(secondPath).toHaveStyle({
-      strokeDasharray: "100",
-      animationDelay: "900ms",
-    });
+    expect(secondPath).toHaveStyle({ strokeDasharray: "100" });
+    const secondDelayRaw = secondPath?.style.animationDelay ?? "0ms";
+    const secondDelayMs = Number(secondDelayRaw.replace("ms", ""));
+    expect(secondDelayMs).toBeGreaterThan(600);
+    expect(secondDelayMs).toBeLessThan(900);
   });
 
   it("does not rely on CSS keyframes for stroke playback", () => {
@@ -133,7 +134,7 @@ describe("AnimatedSignatureCard", () => {
     expect(result[2]?.ease).toBe("power3.out");
   });
 
-  it("uses linear timing through middle stroke segments and eases out on the last one", () => {
+  it("keeps middle strokes linear and applies a strong ease-out on the final one", () => {
     // Arrange
     const segments = [
       { start: 0, end: 0.2 },

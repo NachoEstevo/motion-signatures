@@ -1,47 +1,47 @@
 import { useState } from "react";
-import { nameToPath, type FontLike } from "../vectorize/nameToPath";
+import {
+  nameToStrokePath,
+  type StrokeFont,
+} from "../vectorize/nameToStrokePath";
 import type { SignatureVector } from "../types";
 
 export type SignatureNameFieldProps = {
   onChange?: (signature: SignatureVector) => void;
-  loadFont?: () => Promise<FontLike>;
+  font?: StrokeFont;
 };
 
 /**
- * Collects a typed name and converts it into an SVG signature on demand.
+ * Collects a typed name and converts it into a single-stroke SVG signature
+ * ready to be animated as if written by hand.
  *
- * @param props Change callback and optional font loader override.
+ * @param props Change callback and optional single-line font override.
  * @returns A compact form for generating typed signature vectors.
  *
  * @example
- * <SignatureNameField onChange={(signature) => console.log(signature.paths[0]?.d)} />
+ * <SignatureNameField onChange={(signature) => console.log(signature.paths.length)} />
  */
 export function SignatureNameField({
   onChange,
-  loadFont,
+  font,
 }: SignatureNameFieldProps) {
   const [value, setValue] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [isGenerating, setIsGenerating] = useState(false);
 
-  async function handleGenerate(): Promise<void> {
+  function handleGenerate(): void {
     if (!value.trim()) {
       setErrorMessage("Enter a name before generating the signature.");
       return;
     }
 
-    setIsGenerating(true);
     setErrorMessage("");
 
     try {
-      const signature = await nameToPath(value, { loadFont });
+      const signature = nameToStrokePath(value, { font });
       onChange?.(signature);
     } catch (error) {
       setErrorMessage(
         error instanceof Error ? error.message : "Unable to generate the signature.",
       );
-    } finally {
-      setIsGenerating(false);
     }
   }
 
@@ -82,23 +82,19 @@ export function SignatureNameField({
         }}
       >
         <button
-          disabled={isGenerating}
-          onClick={() => {
-            void handleGenerate();
-          }}
+          onClick={handleGenerate}
           style={{
             border: "none",
             borderRadius: "999px",
             padding: "0.7rem 1.1rem",
             background: "#0f172a",
             color: "#f8fafc",
-            cursor: isGenerating ? "progress" : "pointer",
+            cursor: "pointer",
             fontWeight: 600,
-            opacity: isGenerating ? 0.72 : 1,
           }}
           type="button"
         >
-          {isGenerating ? "Generating..." : "Generate signature"}
+          Generate signature
         </button>
         {errorMessage ? (
           <span role="alert" style={{ color: "#b91c1c" }}>
